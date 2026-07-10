@@ -1,0 +1,39 @@
+body{
+    background-color: antiquewhite;
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 0;
+}
+.label{
+    display: block;
+    margin-bottom:5px;
+    font-weight: bold;
+}
+
+.container{
+    background-color: aquamarine;
+    padding: 58px;
+    border-radius: 30px;
+    margin-bottom: 20px;
+}
+
+.container1{
+    background-color: blue;
+    padding: 50px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.container2{
+    background-color:orange;
+    padding: 50px;
+    border-radius: 100px;
+    margin-bottom: 200px;
+}
+
+.input{
+    width: 100%;
+    padding: 10px;
+    border-color: brown;
+    border-radius: 5px;
+}
