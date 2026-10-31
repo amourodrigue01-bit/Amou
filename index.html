@@ -1,99 +1,207 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InvestiSim - Simulation financière</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f1f5f9;color:#172033;font-family:Arial,sans-serif}
+header{background:#102c4c;color:white;padding:22px;text-align:center}
+header h1{margin:0}
+header p{font-size:12px;color:#b9d3e9}
+main{max-width:850px;margin:22px auto;padding:12px}
+.card{background:white;padding:20px;border-radius:14px;margin-bottom:16px;box-shadow:0 3px 12px #0000000c}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.metric{background:#edf5fc;padding:15px;border-radius:10px}
+.metric small{color:#60758a}
+.metric h2{margin:8px 0;color:#087b59}
+input{width:100%;padding:13px;border:1px solid #ccd6e0;border-radius:8px;margin:8px 0}
+button{background:#087b59;color:white;border:0;border-radius:8px;padding:12px 17px;cursor:pointer;margin:4px}
+button.secondary{background:#17446d}
+button:disabled{opacity:.5}
+.notice{background:#fff4d8;padding:13px;border-radius:9px;color:#765000;font-size:13px}
+.link{overflow-wrap:anywhere;background:#edf5fc;padding:12px;border-radius:8px}
+table{width:100%;border-collapse:collapse}
+td,th{padding:10px;text-align:left;border-bottom:1px solid #eee;font-size:13px}
+footer{text-align:center;color:#64748b;font-size:12px;padding:20px}
+@media(max-width:500px){.grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-    <div class="container">
-    <label class="label" for="text">Text:</label>
-    <input class="input" type="text" id="text" name="text" placeholder="Enter text here">
-    
 
-    <label class="label" for="password">mot de passe:</label>
-    <input class="input" type="password" id="password" name="password" placeholder="Enter password here">
+<header>
+<h1>InvestiSim</h1>
+<p>Laboratoire pédagogique de simulation financière</p>
+</header>
 
+<main>
+<div class="notice">
+<strong>MODE SIMULATION UNIQUEMENT.</strong>
+Aucun argent réel, aucun paiement Mobile Money,
+aucun rendement garanti et aucun retrait réel.
+</div>
 
-    <label class="label" for="email">Email:</label>
-    <input class="input" type="email" id="email" name="email" placeholder="Enter email here">
+<section class="card">
+<h3>Créer un compte de démonstration</h3>
+<input id="name" placeholder="Ton nom">
+<button onclick="register()">Créer mon compte</button>
+<p id="welcome"></p>
+</section>
 
+<div id="dashboard" style="display:none">
 
-    <label class="label" for="number">Number:</label>
-    <input class="input" type="number" id="number" name="number" placeholder="123456">
-    </div>
+<section class="card">
+<h3>Tableau de bord</h3>
+<div class="grid">
+<div class="metric">
+<small>Solde fictif</small>
+<h2 id="balance">0 F</h2>
+</div>
+<div class="metric">
+<small>Invitations</small>
+<h2 id="count">0</h2>
+</div>
+<div class="metric">
+<small>Rendement illustratif</small>
+<h2>1 %</h2>
+</div>
+<div class="metric">
+<small>Commission illustrative</small>
+<h2>5 %</h2>
+</div>
+</div>
+</section>
 
-    <div class="container1">
-    <label class="label" for="checkbox">Vrais:</label>
-    <input class="input" type="checkbox" id="checkbox" name="checkbox" value="option1">
-    <label class="label" for="checkbox2">Faux:</label>
-    <input class="input" type="checkbox" id="checkbox2" name="checkbox" value="option2">
+<section class="card">
+<h3>Simulation de rendement</h3>
+<p>Capital fictif : <strong>10.000 F</strong></p>
+<label>Taux pédagogique en % :</label>
+<input id="rate" type="number" value="1" min="0" max="100">
+<button onclick="calculate()">Calculer</button>
+<p id="result">Résultat : 0 F</p>
+</section>
 
+<section class="card">
+<h3>Mon lien d'invitation</h3>
+<div class="link" id="inviteLink"></div>
+<button class="secondary" onclick="copyLink()">Copier le lien</button>
+<p id="copyStatus"></p>
+</section>
 
-    <label class="label" for="radio1">Vrais:</label>
-    <input class="input" type="radio" id="radio1" name="radio" value="option1">
-    <label class="label" for="radio2">Faux:</label>
-    <input class="input" type="radio" id="radio2" name="radio" value="option2">
-    </div>
+<section class="card">
+<h3>Simuler une invitation</h3>
+<p>Ajoute un participant fictif pour observer le fonctionnement du parrainage.</p>
+<input id="guest" placeholder="Nom du participant">
+<button onclick="invite()">Ajouter un participant fictif</button>
+<p id="inviteStatus"></p>
+</section>
 
-    <div class="container2">
-    <label class="label" for="date">Date:</label>
-    <input class="input" type="date" id="date" name="date">
+<section class="card">
+<h3>Mes filleuls</h3>
+<table>
+<thead><tr><th>Participant</th><th>Code parrain</th><th>Commission fictive</th></tr></thead>
+<tbody id="referrals"></tbody>
+</table>
+</section>
 
+<section class="card">
+<h3>Historique des opérations</h3>
+<div id="history">Aucune opération.</div>
+</section>
 
-    <label class="label" for="time">Time:</label>
-    <input class="input" type="time" id="time" name="time">
+</div>
+</main>
 
+<footer>
+InvestiSim © 2026 — Outil éducatif, sans argent réel.
+</footer>
 
-    <label class="label" for="datetime-local">Date and Time:</label>
-    <input class="input" type="datetime-local" id="datetime-local" name="datetime-local">
-    </div>
+<script>
+let user = JSON.parse(localStorage.getItem("demoUser") || "null");
+let referrals = JSON.parse(localStorage.getItem("demoRefs") || "[]");
+let balance = 10000;
+let history = [];
 
-    <div class="container3">
-    <label class="label" for="color">Color:</label>
-    <input class="input" type="color" id="color" name="color">
+const money = n => Math.round(n).toLocaleString("fr-FR")+" FCFA";
 
+function save(){
+ localStorage.setItem("demoUser",JSON.stringify(user));
+ localStorage.setItem("demoRefs",JSON.stringify(referrals));
+}
 
-    <label class="label" for="file">File:</label>
-    <input class="input" type="file" id="file" name="file">
+function render(){
+ if(!user)return;
+ document.getElementById("dashboard").style.display="block";
+ document.getElementById("welcome").textContent="Bienvenue "+user.name;
+ document.getElementById("balance").textContent=money(balance);
+ document.getElementById("count").textContent=referrals.length;
+ document.getElementById("inviteLink").textContent=
+ location.href.split("?")[0]+"?ref="+user.code;
 
+ document.getElementById("referrals").innerHTML=
+ referrals.map(r=>`<tr><td>${escapeHTML(r.name)}</td>
+ <td>${user.code}</td><td>${money(r.commission)}</td></tr>`).join("")
+ || '<tr><td colspan="3">Aucun invité.</td></tr>';
 
-    <label class="label" for="search">Search:</label>
-    <input class="input" type="search" id="search" name="search" placeholder="Enter search term here">
+ document.getElementById("history").innerHTML=
+ history.map(h=>`<p>${escapeHTML(h)}</p>`).join("")
+ || "Aucune opération.";
+}
 
+function escapeHTML(s){
+ return String(s).replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",
+ '"':"&quot;","'":"&#39;"
+ }[c]));
+}
 
-    <label class="label" for="range">Range:</label>
-    <input class="input" type="range" id="range" name="range">
+function register(){
+ let name=document.getElementById("name").value.trim();
+ if(!name)return alert("Entre ton nom.");
+ if(user)return alert("Un compte de démonstration existe déjà.");
+ let code="INV-"+Math.random().toString(36).slice(2,8).toUpperCase();
+ user={name,code};
+ save();
+ render();
+}
 
-    </div>
+function calculate(){
+ let rate=Number(document.getElementById("rate").value);
+ if(!Number.isFinite(rate)||rate<0||rate>100)
+ return alert("Choisis un taux entre 0 et 100.");
+ let gain=100000*rate/100;
+ document.getElementById("result").textContent=
+ "Gain théorique fictif : "+money(gain);
+}
 
-    <div class="container4">
-    <label class="label" for="url">URL:</label>
-    <input class="input" type="url" id="url" name="url" placeholder="Enter URL here">
+function invite(){
+ if(!user)return;
+ let name=document.getElementById("guest").value.trim();
+ if(!name)return alert("Entre le nom du participant.");
+ let commission=10000*0.05;
+ referrals.push({name,commission});
+ balance+=commission;
+ history.unshift("Commission pédagogique : "+money(commission));
+ save();
+ render();
+ document.getElementById("guest").value="";
+ document.getElementById("inviteStatus").textContent=
+ "Participant fictif ajouté.";
+}
 
-    <label class="label" for="tel">Telephone:</label>
-    <input class="input" type="tel" id="tel" name="tel" placeholder="+1 (555) 555-5555">
-    </div>
+function copyLink(){
+ let link=document.getElementById("inviteLink").textContent;
+ if(navigator.clipboard){
+ navigator.clipboard.writeText(link).then(()=>{
+ document.getElementById("copyStatus").textContent="Lien copié.";
+ });
+ }else{
+ document.getElementById("copyStatus").textContent=link;
+ }
+}
 
-    <div class="container5">
-    <label class="label" for="button">Click Me</label>
-    <input class="input" type="button" id="button" name="button" value="Click Me">
-
-    <label class="label" for="submit">Submit</label>
-    <input class="input" type="submit" id="submit" name="submit" value="Submit">
-
-    <label class="label" for="reset">Reset</label>
-    <input class="input" type="reset" id="reset" name="reset" value="Reset">
-    </div>
-
-    <div class="container6">
-    <label class="label" for="week">Week</label>
-    <input class="input" type="week" id="week" name="week">
-
-    <label class="label" for="month">Month</label>
-    <input class="input" type="month" id="month" name="month">
-    </div>
-
-    </body>
-</html>  
+if(user)render();
+</script>
+</body>
+</html>
